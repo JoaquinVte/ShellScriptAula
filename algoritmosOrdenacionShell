@@ -276,7 +276,44 @@ function merge() {
 # 	conseguir esta implementación cuidadosa, es crucial determinar adecuadamente el
 # 	elemento pivote.  
 
+function Quicksort() {
+	izq=$1
+	der=$2
+	let medio=($izq+$der)/2
+	pivote=${v[$medio]}
 
+#	// Avanzamos izq hasta encontrar un elemento que deba estar a la derecha del pivote,
+#	// igualmente el indice derecho hasta encontrar un elemento que deba estar a la izquierda
+#	// del pivote. Si los indices no se han cruzado realizamos el intercambio.
+	while [[ izq -le der ]]; do
+		while [[ ${v[$izq]} -lt $pivote ]]; do
+			#statements
+			let izq=$izq+1
+		done
+		while [[ ${v[der]} -gt $pivote ]]; do
+			#statements
+			let der=$der-1
+		done
+		if [[ $izq -le $der ]]; then
+			#statements
+			intercambiar $izq $der
+			let izq=$izq+1
+			let der=$der-1
+		fi
+	done
+
+# 	// Si el indiador derecho se ha desplazado realizamos _Quicksort de la parte derecha
+	if [[ $1 -lt $der ]]; then
+		#statements
+		Quicksort $1 $der
+	fi
+
+#	// Si el indiador izquierdo se ha desplazado realizamos _Quicksort de la parte derecha
+	if [[ $izq -lt $2 ]]; then
+		#statements
+		Quicksort $izq $2
+	fi
+}
 
 function rellenar {
 	for i in `seq 1 $elementos`
@@ -375,7 +412,7 @@ do
 		rellenar
 		echo "Ordenacion por Quicksort iniciada a las `date +%H:%M:%S`."
 		inicio=$(date +%s)
-		Quicksort 0 $(($elementos-1)) 
+		Quicksort 0 $((${#v[*]}-1)) 
 		fin=$(date +%s)
 		echo "Ordenacion por Quicksort finalizada a las `date +%H:%M:%S`."
 		tiempoEmpleado=$(($fin-$inicio))
@@ -394,5 +431,3 @@ echo $filaInserccion >> resultado
 echo $filaMerge >> resultado
 echo $filaQuicksort >> resultado
 echo `cat resultado`
-
-
